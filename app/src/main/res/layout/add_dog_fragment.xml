@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center">
+    <EditText
+        android:id="@+id/textName"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="Name"/>
+    <EditText
+        android:id="@+id/textAge"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="age"
+        android:inputType="number"/>
+    <EditText
+        android:id="@+id/textBreed"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:hint="breed"/>
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/addButton"
+        android:layout_width="100dp"
+        android:layout_height="50dp"
+        android:text="add"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

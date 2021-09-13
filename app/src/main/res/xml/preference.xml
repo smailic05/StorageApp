@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <ListPreference
+        android:defaultValue=""
+        android:entries="@array/sort_type"
+        android:entryValues="@array/sort_type"
+        android:key="sortList"
+        android:title="Sort type"
+        />
+    <SwitchPreference
+        android:defaultValue="false"
+        android:key="switch_preference"
+        android:title="Switch database to SQLite" />
+</PreferenceScreen>
