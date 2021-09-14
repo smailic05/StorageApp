@@ -10,7 +10,10 @@ interface DatabaseDao {
     fun insert(vararg dogs: Dog)
 
     @Delete
-    fun delete(terminals: Dog)
+    fun delete(dog: Dog)
+
+    @Update
+    fun update(dog:Dog)
 
     @Query("SELECT * FROM dogs")
     fun getAllRepositories(): LiveData<List<Dog>>

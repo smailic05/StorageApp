@@ -6,13 +6,17 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.example.storageapp.AdapterDogs
 import com.example.storageapp.ui.MainViewModel
 import com.example.storageapp.R
 import com.example.storageapp.databinding.MainFragmentBinding
+import com.example.storageapp.room.RoomRepository
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainFragment: Fragment() {
@@ -31,12 +35,16 @@ class MainFragment: Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter= AdapterDogs()
-        binding.recyclerView.adapter=adapter
 
-        model.arrayOfDogs.observe(viewLifecycleOwner,{
+        lifecycleScope.launch {
+            val adapter = AdapterDogs(model)
+            binding.recyclerView.adapter = adapter
+            model.arrayOfDogs.observe(viewLifecycleOwner,{
             adapter.submitList(it)
         })
+        }
+
+
 
         model.getDogsFromDatabase()
 

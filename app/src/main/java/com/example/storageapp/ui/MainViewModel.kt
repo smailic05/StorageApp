@@ -23,8 +23,6 @@ class MainViewModel @Inject constructor(
     init {
         arrayOfDogs=roomRepository.getAllRepositories()
     }
-
-
     var sqlTurnedOn = false
 
     fun addDogsToDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
@@ -32,12 +30,23 @@ class MainViewModel @Inject constructor(
             roomRepository.insertIntoDatabase(dog)
         else
             db.insert(dog)
-
     }
     fun getDogsFromDatabase()=viewModelScope.launch(Dispatchers.IO){
         if (!sqlTurnedOn)
             arrayOfDogs = roomRepository.getAllRepositories()
          else
+            arrayOfDogs = db.getData()
+    }
+    fun updateDogsInDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
+        if (!sqlTurnedOn)
+            roomRepository.updateInDatabase(dog)
+        else
+            arrayOfDogs = db.getData()
+    }
+    fun deleteDogsInDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
+        if (!sqlTurnedOn)
+            roomRepository.deleteFromDatabase(dog)
+        else
             arrayOfDogs = db.getData()
     }
 
@@ -47,7 +56,6 @@ class MainViewModel @Inject constructor(
         } else {
             arrayOfDogs=db.getSortedName()
         }
-
     }
     fun sortDataByAge()=viewModelScope.launch(Dispatchers.IO){
         if (!sqlTurnedOn){
@@ -55,7 +63,6 @@ class MainViewModel @Inject constructor(
         } else {
             arrayOfDogs=db.getSortedAge()
         }
-
     }
     fun sortDataByBreed()=viewModelScope.launch(Dispatchers.IO){
         if (!sqlTurnedOn){
@@ -63,6 +70,5 @@ class MainViewModel @Inject constructor(
         } else {
             arrayOfDogs=db.getSortedBreed()
         }
-
     }
 }
