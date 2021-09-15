@@ -1,13 +1,17 @@
 package com.example.storageapp.ui
 
+import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.preference.PreferenceManager
 import bag.dev.rs_task_4_db.data.sqlite.SqliteDatabaseHelper
 import com.example.storageapp.room.Dog
 import com.example.storageapp.room.RoomRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
+import dagger.hilt.android.qualifiers.ActivityContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.android.scopes.ViewModelScoped
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -16,14 +20,10 @@ import javax.inject.Inject
 @HiltViewModel
 class MainViewModel @Inject constructor(
     private val roomRepository: RoomRepository,
-    private val db: SqliteDatabaseHelper
+    val db: SqliteDatabaseHelper
     ): ViewModel() {
-
-    var arrayOfDogs:LiveData<List<Dog>>
-    init {
-        arrayOfDogs=roomRepository.getAllRepositories()
-    }
     var sqlTurnedOn = false
+
 
     fun addDogsToDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
         if (!sqlTurnedOn)
@@ -31,44 +31,44 @@ class MainViewModel @Inject constructor(
         else
             db.insert(dog)
     }
-    fun getDogsFromDatabase()=viewModelScope.launch(Dispatchers.IO){
+    fun getDogsFromDatabase():LiveData<List<Dog>>{
         if (!sqlTurnedOn)
-            arrayOfDogs = roomRepository.getAllRepositories()
+            return roomRepository.getAllRepositories()
          else
-            arrayOfDogs = db.getData()
+            return  db.getData()
     }
-    fun updateDogsInDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
+    fun updateDogsInDatabase(dog: Dog){
         if (!sqlTurnedOn)
             roomRepository.updateInDatabase(dog)
         else
-            arrayOfDogs = db.getData()
+            db.update(dog)
     }
-    fun deleteDogsInDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
+    fun deleteDogsInDatabase(dog: Dog){
         if (!sqlTurnedOn)
             roomRepository.deleteFromDatabase(dog)
         else
-            arrayOfDogs = db.getData()
+            db.delete(dog)
     }
 
-    fun sortDataByName()=viewModelScope.launch(Dispatchers.IO){
+    fun sortDataByName():LiveData<List<Dog>>{
         if (!sqlTurnedOn){
-            arrayOfDogs=roomRepository.sortDataByName()
+            return roomRepository.sortDataByName()
         } else {
-            arrayOfDogs=db.getSortedName()
+            return db.getSortedName()
         }
     }
-    fun sortDataByAge()=viewModelScope.launch(Dispatchers.IO){
+    fun sortDataByAge():LiveData<List<Dog>>{
         if (!sqlTurnedOn){
-            arrayOfDogs=roomRepository.sortDataByAge()
+            return roomRepository.sortDataByAge()
         } else {
-            arrayOfDogs=db.getSortedAge()
+            return db.getSortedAge()
         }
     }
-    fun sortDataByBreed()=viewModelScope.launch(Dispatchers.IO){
+    fun sortDataByBreed():LiveData<List<Dog>>{
         if (!sqlTurnedOn){
-            arrayOfDogs=roomRepository.sortDataByBreed()
+            return roomRepository.sortDataByBreed()
         } else {
-            arrayOfDogs=db.getSortedBreed()
+            return db.getSortedBreed()
         }
     }
 }

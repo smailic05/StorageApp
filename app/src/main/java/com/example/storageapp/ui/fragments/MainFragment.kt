@@ -36,30 +36,30 @@ class MainFragment: Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        lifecycleScope.launch {
-            val adapter = AdapterDogs(model)
-            binding.recyclerView.adapter = adapter
-            model.arrayOfDogs.observe(viewLifecycleOwner,{
-            adapter.submitList(it)
-        })
-        }
-
-
-
-        model.getDogsFromDatabase()
-
-        binding.floatingActionButton.setOnClickListener {
-            findNavController().navigate(R.id.addDogFragment)
-        }
-
         val sp = PreferenceManager.getDefaultSharedPreferences(requireContext())
         val spIndex = sp.getString("sortList","0").toString()
         val spSwitch = sp.getBoolean("switch_preference",false)
         model.sqlTurnedOn = spSwitch
+
+        val adapter = AdapterDogs(model)
+        binding.recyclerView.adapter = adapter
+        model.getDogsFromDatabase().observe(viewLifecycleOwner,{
+            adapter.submitList(it)
+        })
+        binding.floatingActionButton.setOnClickListener {
+            findNavController().navigate(R.id.addDogFragment)
+        }
+
         when(spIndex){
-            "name"-> model.sortDataByName()
-            "breed"-> model.sortDataByBreed()
-            "age"->model.sortDataByAge()
+            "name"-> model.sortDataByName().observe(viewLifecycleOwner,{
+                adapter.submitList(it)
+            })
+            "breed"-> model.sortDataByBreed().observe(viewLifecycleOwner,{
+                adapter.submitList(it)
+            })
+            "age"->model.sortDataByAge().observe(viewLifecycleOwner,{
+                adapter.submitList(it)
+            })
         }
     }
 

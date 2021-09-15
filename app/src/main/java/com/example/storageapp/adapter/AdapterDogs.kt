@@ -1,25 +1,16 @@
 package com.example.storageapp
 
-import android.app.Activity
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import bag.dev.rs_task_4_db.data.sqlite.SqliteDatabaseHelper
 import com.example.storageapp.databinding.DogsItemBinding
-import com.example.storageapp.room.DatabaseDao
 import com.example.storageapp.room.Dog
-import com.example.storageapp.room.RoomRepository
-import com.example.storageapp.ui.MainActivity
 import com.example.storageapp.ui.MainViewModel
 import com.example.storageapp.ui.fragments.MainFragmentDirections
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.qualifiers.ActivityContext
-import javax.inject.Inject
+
 
 
 class AdapterDogs(val mainViewModel:MainViewModel): ListAdapter<Dog,DogsViewHolder>(itemComparator) {

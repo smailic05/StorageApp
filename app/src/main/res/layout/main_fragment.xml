@@ -15,6 +15,7 @@
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_gravity="right"
         android:clickable="true"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 </androidx.appcompat.widget.LinearLayoutCompat>

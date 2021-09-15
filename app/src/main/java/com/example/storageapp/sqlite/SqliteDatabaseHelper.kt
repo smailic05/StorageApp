@@ -10,6 +10,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.COLUMN_NAME_AGE
 import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.COLUMN_NAME_BREED
+import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.COLUMN_NAME_ID
 import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.COLUMN_NAME_NAME
 import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.DATABASE_NAME
 import bag.dev.rs_task_4_db.data.sqlite.SqliteObject.TABLE_NAME
@@ -23,32 +24,48 @@ private const val DATABASE_VERSION = 1
 private const val LOG_TAG = "sql tag"
 private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE $TABLE_NAME (" +
-            "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
             "$COLUMN_NAME_NAME TEXT," +
-            "$COLUMN_NAME_AGE INTEGER)," +
+            "$COLUMN_NAME_AGE INTEGER," +
             "$COLUMN_NAME_BREED TEXT)"
 @Singleton
 class SqliteDatabaseHelper @Inject constructor(@ApplicationContext context: Context) :
     SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
     override fun onCreate(db: SQLiteDatabase) {
         db.execSQL(SQL_CREATE_ENTRIES)
+        onCreate(db)
     }
 
     override fun onUpgrade(db: SQLiteDatabase, oldVersion: Int, newVersion: Int) {
         Log.d(LOG_TAG, "onUpgrade()")
     }
 
-    fun getData(): MutableLiveData<List<Dog>> =
+    fun getData(): LiveData<List<Dog>> =
         getListOfTopics("SELECT * FROM $TABLE_NAME")
 
-    fun getSortedName(): MutableLiveData<List<Dog>> =
+    fun delete(dog: Dog){
+        writableDatabase.delete(TABLE_NAME, COLUMN_NAME_ID+"= '"+dog.id+"'",null)
+    }
+
+    fun update(dog: Dog){
+        val cv = ContentValues()
+
+        cv.put(COLUMN_NAME_ID, dog.id)
+        cv.put(COLUMN_NAME_NAME, dog.name)
+        cv.put(COLUMN_NAME_AGE, dog.age)
+        cv.put(COLUMN_NAME_BREED, dog.breed)
+        writableDatabase.update(TABLE_NAME, cv ,
+            "$COLUMN_NAME_ID= '"+dog.id+"'",null)
+    }
+
+    fun getSortedName(): LiveData<List<Dog>> =
         getListOfTopics("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_NAME_NAME")
 
-    fun getSortedAge(): MutableLiveData<List<Dog>> =
+    fun getSortedAge(): LiveData<List<Dog>> =
         getListOfTopics("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_NAME_AGE")
 
 
-    fun getSortedBreed(): MutableLiveData<List<Dog>> =
+    fun getSortedBreed(): LiveData<List<Dog>> =
         getListOfTopics("SELECT * FROM $TABLE_NAME ORDER BY $COLUMN_NAME_BREED")
 
 
@@ -62,7 +79,7 @@ class SqliteDatabaseHelper @Inject constructor(@ApplicationContext context: Cont
                     val age = it.getInt(it.getColumnIndex(COLUMN_NAME_AGE))
                     val breed = it.getString(it.getColumnIndex(COLUMN_NAME_BREED))
 
-                    dogs.add(Dog(0, name, age, breed))
+                    dogs.add(Dog(name=name, age = age, breed = breed))
                 } while (it.moveToNext())
             }
         }
