@@ -10,16 +10,18 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.preference.PreferenceManager
 import com.example.storageapp.AdapterDogs
+import com.example.storageapp.DogsViewHolder
 import com.example.storageapp.ui.MainViewModel
 import com.example.storageapp.R
 import com.example.storageapp.databinding.MainFragmentBinding
+import com.example.storageapp.room.Dog
 import com.example.storageapp.room.RoomRepository
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @AndroidEntryPoint
-class MainFragment: Fragment() {
+class MainFragment: Fragment(),DogsViewHolder.DeleteListener {
     private var _binding: MainFragmentBinding? = null
     private val binding get() = _binding!!
     private val model: MainViewModel by activityViewModels()
@@ -41,7 +43,7 @@ class MainFragment: Fragment() {
         val spSwitch = sp.getBoolean("switch_preference",false)
         model.sqlTurnedOn = spSwitch
 
-        val adapter = AdapterDogs(model)
+        val adapter = AdapterDogs(this)
         binding.recyclerView.adapter = adapter
         model.getDogsFromDatabase().observe(viewLifecycleOwner,{
             adapter.submitList(it)
@@ -66,5 +68,9 @@ class MainFragment: Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         _binding=null
+    }
+
+    override fun delete(dog: Dog) {
+        model.deleteDogsInDatabase(dog)
     }
 }

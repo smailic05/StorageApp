@@ -13,12 +13,12 @@ import com.example.storageapp.ui.fragments.MainFragmentDirections
 
 
 
-class AdapterDogs(val mainViewModel:MainViewModel): ListAdapter<Dog,DogsViewHolder>(itemComparator) {
+class AdapterDogs(val deleteListener: DogsViewHolder.DeleteListener): ListAdapter<Dog,DogsViewHolder>(itemComparator) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DogsViewHolder {
         val layoutInflater = LayoutInflater.from(parent.context)
         val  binding=DogsItemBinding.inflate(layoutInflater,parent,false)
-        return DogsViewHolder(binding,mainViewModel)
+        return DogsViewHolder(binding,deleteListener)
     }
 
     override fun onBindViewHolder(holder: DogsViewHolder, position: Int) {
@@ -45,7 +45,7 @@ class AdapterDogs(val mainViewModel:MainViewModel): ListAdapter<Dog,DogsViewHold
 
 
 class DogsViewHolder(private val binding: DogsItemBinding,
-                     val mainViewModel:MainViewModel
+                     private val deleteListener:DeleteListener
                      ): RecyclerView.ViewHolder(binding.root){
 
 
@@ -57,12 +57,15 @@ class DogsViewHolder(private val binding: DogsItemBinding,
             navController.navigate(action)
         }
         binding.root.setOnLongClickListener {
-                mainViewModel.deleteDogsInDatabase(item)
+                deleteListener.delete(item)
                 return@setOnLongClickListener true
         }
         binding.textAgeDog.text=item.age.toString()
         binding.textBreedDog.text=item.breed
         binding.textNameDog.text=item.name
 
+    }
+    interface DeleteListener {
+        fun delete(dog:Dog)
     }
 }

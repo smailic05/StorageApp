@@ -39,13 +39,17 @@ class MainViewModel @Inject constructor(
     }
     fun updateDogsInDatabase(dog: Dog){
         if (!sqlTurnedOn)
-            roomRepository.updateInDatabase(dog)
+            viewModelScope.launch(Dispatchers.IO) {
+                roomRepository.updateInDatabase(dog)
+        }
         else
             db.update(dog)
     }
     fun deleteDogsInDatabase(dog: Dog){
         if (!sqlTurnedOn)
-            roomRepository.deleteFromDatabase(dog)
+            viewModelScope.launch(Dispatchers.IO) {
+                roomRepository.deleteFromDatabase(dog)
+            }
         else
             db.delete(dog)
     }
