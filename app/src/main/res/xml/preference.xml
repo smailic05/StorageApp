@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
     <ListPreference
-        android:defaultValue=""
+        android:defaultValue="name"
         android:entries="@array/sort_type"
         android:entryValues="@array/sort_type"
         android:key="sortList"

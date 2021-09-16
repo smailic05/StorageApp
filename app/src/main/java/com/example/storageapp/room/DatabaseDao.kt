@@ -16,14 +16,14 @@ interface DatabaseDao {
     fun update(dog:Dog)
 
     @Query("SELECT * FROM dogs")
-    fun getAllRepositories(): LiveData<List<Dog>>
+    fun getAllRepositories(): List<Dog>
 
     @Query("SELECT * FROM dogs ORDER BY name ASC")
-    fun sortDataByName(): LiveData<List<Dog>>
+    fun sortDataByName(): List<Dog>
 
     @Query("SELECT * FROM dogs ORDER BY age ASC")
-    fun sortDataByAge(): LiveData<List<Dog>>
+    fun sortDataByAge(): List<Dog>
 
     @Query("SELECT * FROM dogs ORDER BY breed ASC")
-    fun sortDataByBreed(): LiveData<List<Dog>>
+    fun sortDataByBreed(): List<Dog>
 }

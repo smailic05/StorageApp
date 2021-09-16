@@ -24,7 +24,7 @@ private const val DATABASE_VERSION = 1
 private const val LOG_TAG = "sql tag"
 private const val SQL_CREATE_ENTRIES =
     "CREATE TABLE $TABLE_NAME (" +
-            "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+            "$COLUMN_NAME_ID INTEGER PRIMARY KEY AUTOINCREMENT," +
             "$COLUMN_NAME_NAME TEXT," +
             "$COLUMN_NAME_AGE INTEGER," +
             "$COLUMN_NAME_BREED TEXT)"
@@ -43,7 +43,7 @@ class SqliteDatabaseHelper @Inject constructor(@ApplicationContext context: Cont
         getListOfTopics("SELECT * FROM $TABLE_NAME")
 
     fun delete(dog: Dog){
-        writableDatabase.delete(TABLE_NAME, COLUMN_NAME_ID+"= '"+dog.id+"'",null)
+        writableDatabase.delete(TABLE_NAME, COLUMN_NAME_NAME+"= '"+dog.name+"'",null)
     }
 
     fun update(dog: Dog){
@@ -53,8 +53,7 @@ class SqliteDatabaseHelper @Inject constructor(@ApplicationContext context: Cont
         cv.put(COLUMN_NAME_NAME, dog.name)
         cv.put(COLUMN_NAME_AGE, dog.age)
         cv.put(COLUMN_NAME_BREED, dog.breed)
-        writableDatabase.update(TABLE_NAME, cv ,
-            "$COLUMN_NAME_ID= '"+dog.id+"'",null)
+        writableDatabase.update(TABLE_NAME, cv ,null,null)
     }
 
     fun getSortedName(): LiveData<List<Dog>> =

@@ -24,6 +24,7 @@ class MainViewModel @Inject constructor(
     ): ViewModel() {
     var sqlTurnedOn = false
 
+    var arrayOfDogs=MutableLiveData<List<Dog>>()
 
     fun addDogsToDatabase(dog: Dog)=viewModelScope.launch(Dispatchers.IO){
         if (!sqlTurnedOn)
@@ -31,11 +32,11 @@ class MainViewModel @Inject constructor(
         else
             db.insert(dog)
     }
-    fun getDogsFromDatabase():LiveData<List<Dog>>{
+    fun getDogsFromDatabase(){
         if (!sqlTurnedOn)
-            return roomRepository.getAllRepositories()
+            arrayOfDogs.postValue(roomRepository.getAllRepositories())
          else
-            return  db.getData()
+            arrayOfDogs.postValue(db.getData().value)
     }
     fun updateDogsInDatabase(dog: Dog){
         if (!sqlTurnedOn)
@@ -54,25 +55,31 @@ class MainViewModel @Inject constructor(
             db.delete(dog)
     }
 
-    fun sortDataByName():LiveData<List<Dog>>{
+    fun sortDataByName(){
         if (!sqlTurnedOn){
-            return roomRepository.sortDataByName()
+            viewModelScope.launch(Dispatchers.IO){
+                arrayOfDogs.postValue(roomRepository.sortDataByName())
+            }
         } else {
-            return db.getSortedName()
+            arrayOfDogs.postValue(db.getSortedName().value)
         }
     }
-    fun sortDataByAge():LiveData<List<Dog>>{
+    fun sortDataByAge(){
         if (!sqlTurnedOn){
-            return roomRepository.sortDataByAge()
+            viewModelScope.launch(Dispatchers.IO){
+                arrayOfDogs.postValue(roomRepository.sortDataByAge())
+            }
         } else {
-            return db.getSortedAge()
+            arrayOfDogs.postValue(db.getSortedAge().value)
         }
     }
-    fun sortDataByBreed():LiveData<List<Dog>>{
+    fun sortDataByBreed(){
         if (!sqlTurnedOn){
-            return roomRepository.sortDataByBreed()
+            viewModelScope.launch(Dispatchers.IO){
+                arrayOfDogs.postValue(roomRepository.sortDataByBreed())
+            }
         } else {
-            return db.getSortedBreed()
+            arrayOfDogs.postValue(db.getSortedBreed().value)
         }
     }
 }
